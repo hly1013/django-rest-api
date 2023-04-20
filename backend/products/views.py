@@ -45,3 +45,16 @@ class ProductListAPIView(generics.ListAPIView):
 
 
 product_list_view = ProductListAPIView.as_view()
+
+
+def product_alt_view(request, *args, **kwargs):
+    method = request.method
+
+    if method == 'GET':
+        pass
+        # url_args ??
+        # get request -> detail view
+        # list view
+    if method == 'POST':
+        # create an item
+        pass
