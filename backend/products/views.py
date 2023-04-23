@@ -19,7 +19,7 @@ class ProductListCreateAPIView(generics.ListCreateAPIView):
         content = serializer.validated_data.get('content') or None
         if content is None:
             content = title
-        serializer.save(content=content)
+        instance = serializer.save(content=content)
         # send a django signal
 
 
@@ -38,6 +38,34 @@ class ProductDetailAPIView(generics.RetrieveAPIView):
 
 
 product_detail_view = ProductDetailAPIView.as_view()
+
+
+class ProductUpdateAPIView(generics.UpdateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    lookup_field = 'pk'
+    # -> Product.objects.get(pk='abc')
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        if not instance.content:
+            instance.content = instance.title
+
+
+product_update_view = ProductUpdateAPIView.as_view()
+
+
+class ProductDestroyAPIView(generics.DestroyAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    lookup_field = 'pk'
+    # -> Product.objects.get(pk='abc')
+
+    def perform_destroy(self, instance):
+        super().perform_destroy(instance)
+
+
+product_destroy_view = ProductDestroyAPIView.as_view()
 
 
 '''
